@@ -1,0 +1,43 @@
+services:
+  itrum-db:
+    image: postgres:15
+    container_name: itrum-db
+    environment:
+      POSTGRES_DB: db_itrum
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - db_itrum_data:/var/lib/postgresql/data
+    ports:
+      - "5435:5432"
+    networks:
+      - itrum-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d db_itrum" ]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+  itrum-app:
+    build:
+      context: .
+    container_name: itrum-app
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - JDBC_DATABASE_URL=jdbc:postgresql://itrum-db:5432/db_itrum?currentSchema=itrum_wallet
+      - USERNAME=postgres
+      - PASSWORD=postgres
+    depends_on:
+      itrum-db:
+        condition: service_healthy
+    networks:
+      - itrum-network
+    ports:
+      - "8800:8800"
+
+networks:
+  itrum-network:
+    driver: bridge
+
+volumes:
+  db_itrum_data:
