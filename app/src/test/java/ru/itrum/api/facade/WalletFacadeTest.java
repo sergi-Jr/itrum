@@ -16,6 +16,7 @@ import ru.itrum.api.mapper.WalletMapper;
 import ru.itrum.api.service.WalletService;
 
 import java.math.BigDecimal;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,6 +44,7 @@ class WalletFacadeTest {
     private WalletChangeBalanceDtoRequest request;
     private WalletDtoResponse expectedResponse;
     private static final UUID WALLET_ID = UUID.randomUUID();
+    private static final BigDecimal TEST_WALLET_AMOUNT = new BigDecimal("100.00");
 
     @BeforeEach
     void setUp() {
@@ -53,10 +55,10 @@ class WalletFacadeTest {
         request = new WalletChangeBalanceDtoRequest(
                 WALLET_ID,
                 OperationType.DEPOSIT,
-                new BigDecimal("100.00")
+                TEST_WALLET_AMOUNT
         );
 
-        expectedResponse = new WalletDtoResponse(WALLET_ID);
+        expectedResponse = new WalletDtoResponse(WALLET_ID, TEST_WALLET_AMOUNT);
     }
 
     @Test
@@ -108,12 +110,34 @@ class WalletFacadeTest {
     @Test
     void changeBalance_ServiceGetById_ThrowsException() {
         when(walletService.getByIdLockForUpdate(WALLET_ID))
-                .thenThrow(new RuntimeException("Wallet not found"));
+                .thenThrow(new NoSuchElementException("Wallet not found"));
 
-        RuntimeException exception = assertThrows(RuntimeException.class,
+        NoSuchElementException exception = assertThrows(NoSuchElementException.class,
                 () -> walletFacade.changeBalance(request));
 
         assertEquals("Wallet not found", exception.getMessage());
         verify(walletService, never()).save(any());
+    }
+
+    @Test
+    void getById_ReturnsWallet() {
+        when(walletService.getById(WALLET_ID)).thenReturn(testWallet);
+        when(walletMapper.toDto(testWallet)).thenReturn(expectedResponse);
+
+        WalletDtoResponse result = walletFacade.getById(WALLET_ID);
+
+        assertEquals(expectedResponse, result);
+        verify(walletService).getById(WALLET_ID);
+        verify(walletMapper).toDto(testWallet);
+    }
+
+    @Test
+    void getById_ThrowsException() {
+        when(walletService.getById(WALLET_ID)).thenThrow(new NoSuchElementException("Wallet not found"));
+
+        NoSuchElementException exception = assertThrows(NoSuchElementException.class,
+                () -> walletFacade.getById(WALLET_ID));
+
+        assertEquals("Wallet not found", exception.getMessage());
     }
 }

@@ -7,7 +7,7 @@ import ru.itrum.api.entity.Wallet;
 @Component
 public class WalletMapper {
 
-    public WalletDtoResponse toDto(Wallet updatedWallet) {
-        return new WalletDtoResponse(updatedWallet.getId());
+    public WalletDtoResponse toDto(Wallet wallet) {
+        return new WalletDtoResponse(wallet.getId(), wallet.getAmount());
     }
 }
