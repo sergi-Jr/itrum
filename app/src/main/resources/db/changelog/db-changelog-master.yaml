@@ -1,3 +1,5 @@
 databaseChangeLog:
-  - includeAll:
-      path: /db/changelog/0-init/*
+  - include:
+      file: /db/changelog/0-init/0001_FORCED_MIGRATION_2025-12-03-init_schema.yaml
+  - include:
+      file: /db/changelog/0-init/2025-12-02-init_tables.yaml

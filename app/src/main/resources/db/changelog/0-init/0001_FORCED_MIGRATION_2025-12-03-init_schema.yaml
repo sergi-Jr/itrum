@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1-create-schema-itrum_wallet
+      author: Sergey Burashnikov
+      changes:
+        - sql:
+            sql: |
+              CREATE SCHEMA IF NOT EXISTS itrum_wallet;
+      rollback:
+        - sql:
+            sql: DROP SCHEMA IF EXISTS itrum_wallet CASCADE;
