@@ -13,6 +13,7 @@ import ru.itrum.api.mapper.WalletMapper;
 import ru.itrum.api.service.WalletService;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -41,5 +42,10 @@ public class WalletFacade {
         Wallet updatedWallet = walletService.save(wallet);
 
         return walletMapper.toDto(updatedWallet);
+    }
+
+    public WalletDtoResponse getById(UUID walletId) {
+        Wallet wallet = walletService.getById(walletId);
+        return walletMapper.toDto(wallet);
     }
 }

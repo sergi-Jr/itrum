@@ -27,4 +27,10 @@ public class WalletService {
                 () -> new NoSuchElementException("Wallet not found, id: " + id)
         );
     }
+
+    public Wallet getById(UUID walletId) {
+        return walletRepository.findById(walletId).orElseThrow(
+                () -> new NoSuchElementException("Wallet not found, id: " + walletId)
+        );
+    }
 }
