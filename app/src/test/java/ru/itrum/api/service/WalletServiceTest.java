@@ -97,4 +97,26 @@ class WalletServiceTest {
         assertEquals("DB connection error", exception.getMessage());
         verify(walletRepository).findByIdLockForUpdate(WALLET_ID);
     }
+
+    @Test
+    void getById_Success() {
+        when(walletRepository.findById(WALLET_ID)).thenReturn(Optional.of(testWallet));
+
+        Wallet result = walletService.getById(WALLET_ID);
+        assertEquals(testWallet, result);
+        verify(walletRepository).findById(WALLET_ID);
+    }
+
+    @Test
+    void getById_NonExistingWallet_ThrowsNoSuchElementException() {
+        UUID nonExistingId = UUID.randomUUID();
+        when(walletRepository.findById(nonExistingId))
+                .thenReturn(Optional.empty());
+
+        NoSuchElementException exception = assertThrows(NoSuchElementException.class,
+                () -> walletService.getById(nonExistingId));
+
+        assertTrue(exception.getMessage().contains("Wallet not found, id: " + nonExistingId));
+        verify(walletRepository).findById(nonExistingId);
+    }
 }
