@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "ru.itrum"
-version = "0.0.1"
+version = "1.0.0"
 
 repositories {
     // Use Maven Central for resolving dependencies.
@@ -27,7 +27,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa:3.5.0")
     implementation("org.liquibase:liquibase-core:4.28.0")
     implementation("org.postgresql:postgresql:42.7.3")
-    implementation("net.lbruun.springboot:preliquibase-spring-boot-starter:1.6.1")
     implementation("org.springframework.boot:spring-boot-starter-actuator:3.5.0")
     implementation("org.springframework.boot:spring-boot-starter-web:3.5.0")
     implementation("org.projectlombok:lombok:1.18.36")
@@ -40,7 +39,7 @@ dependencies {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(17)
     }
 }
 

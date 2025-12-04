@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1-create-wallet-table
+      author: Sergey Burashnikov
+      changes:
+        - createTable:
+            schemaName: itrum_wallet
+            tableName: wallets
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: amount
+                  type: decimal(10,2)
+                  constraints:
+                    nullable: false
